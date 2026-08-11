@@ -108,7 +108,7 @@ class HomeScreen extends ConsumerWidget {
       children: [
         // ---- Showcase top ---------------------------------------------------
         info.when(
-          loading: () => const SkeletonBox(height: 420, borderRadius: 0),
+          loading: () => const SkeletonBox(height: 500, borderRadius: 0),
           error: (_, _) => const SizedBox.shrink(),
           data: (r) => HeroShowcase(restaurant: r),
         ),
@@ -160,32 +160,34 @@ class HomeScreen extends ConsumerWidget {
               error: (_, _) => const SizedBox.shrink(),
               data: (list) {
                 if (list.isEmpty) return const SizedBox.shrink();
-                return SizedBox(
-                  height: 190,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: list.take(8).length,
-                    separatorBuilder: (_, _) => const SizedBox(width: 12),
-                    itemBuilder: (_, i) {
-                      final g = list.take(8).toList()[i];
-                      return Container(
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(22),
-                          border: Border.all(
-                            color: AppColors.line.withValues(alpha: 0.7),
-                          ),
-                        ),
+                final shots = list.take(6).toList();
+                return GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                    childAspectRatio: 1.05,
+                  ),
+                  itemCount: shots.length,
+                  itemBuilder: (_, i) {
+                    final g = shots[i];
+                    return GestureDetector(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const GalleryScreen()),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(18),
                         child: AppNetworkImage(
                           url: g.imageUrl,
-                          width: 150,
-                          height: 190,
+                          fit: BoxFit.cover,
                           borderRadius: 0,
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 );
               },
             ),
@@ -363,7 +365,7 @@ class _HeroShowcaseState extends State<HeroShowcase>
     return Stack(
       children: [
         SizedBox(
-          height: 420,
+          height: 500,
           width: double.infinity,
           child: ClipRect(
             child: ScaleTransition(
@@ -379,7 +381,7 @@ class _HeroShowcaseState extends State<HeroShowcase>
           ),
         ),
         Container(
-          height: 420,
+          height: 500,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
