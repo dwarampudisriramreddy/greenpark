@@ -10,6 +10,21 @@ class AppColors {
   static const Color brandGreenLight = Color(0xFF3FA05B);
   static const Color brandMint = Color(0xFFE6F4EA);
 
+  /// Theme-aware brand green at full saturation — brighter in dark mode so it
+  /// stays legible on dark surfaces. Use for green foregrounds (icons, labels,
+  /// prices, links) instead of applying opacity to [brandGreen].
+  static Color green(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? brandGreenLight
+          : brandGreen;
+
+  /// Theme-aware green-tinted surface for chips, badges and active states.
+  /// Solid green tint — never a grey overlay.
+  static Color greenSurface(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? brandGreenDark
+          : brandMint;
+
   // Accents
   static const Color accentGold = Color(0xFFC9A227);
   static const Color accentGoldLight = Color(0xFFF6ECD2);

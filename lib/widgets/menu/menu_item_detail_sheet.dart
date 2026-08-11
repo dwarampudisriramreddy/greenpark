@@ -49,7 +49,7 @@ class MenuItemDetailSheet extends StatelessWidget {
                         height: 280,
                         width: double.infinity,
                         borderRadius: 0,
-                        backgroundColor: AppColors.brandMint.withValues(alpha: 0.4),
+                        backgroundColor: AppColors.greenSurface(context),
                       ),
                       Positioned(
                         top: 14,
@@ -171,17 +171,17 @@ class _DetailChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.brandMint.withValues(alpha: 0.5),
+        color: AppColors.greenSurface(context),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 15, color: AppColors.brandGreen),
+          Icon(icon, size: 15, color: AppColors.green(context)),
           const SizedBox(width: 6),
           Text(
             label,
-            style: AppText.title.copyWith(fontSize: 12, color: AppColors.brandGreen),
+            style: AppText.title.copyWith(fontSize: 12, color: AppColors.green(context)),
           ),
         ],
       ),

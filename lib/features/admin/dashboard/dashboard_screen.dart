@@ -169,9 +169,7 @@ class _QuickActions extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark
-            ? AppColors.brandGreenDark.withValues(alpha: 0.35)
-            : AppColors.brandMint.withValues(alpha: 0.4),
+        color: AppColors.greenSurface(context),
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
@@ -193,7 +191,7 @@ class _QuickActions extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 16, color: AppColors.brandGreen),
+          Icon(icon, size: 16, color: AppColors.green(context)),
           const SizedBox(width: 8),
           Expanded(child: Text(text, style: AppText.bodySmallFor(context))),
         ],

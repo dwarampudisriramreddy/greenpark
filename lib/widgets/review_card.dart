@@ -46,7 +46,7 @@ class ReviewCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Icon(Icons.format_quote_rounded, color: AppColors.brandGreen.withValues(alpha: 0.25)),
+              Icon(Icons.format_quote_rounded, color: AppColors.brandMint),
             ],
           ),
           const SizedBox(height: 12),

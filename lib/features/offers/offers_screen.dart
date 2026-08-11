@@ -197,7 +197,7 @@ class _OfferDetailSheet extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                             decoration: BoxDecoration(
-                              color: AppColors.brandMint.withValues(alpha: 0.5),
+                              color: AppColors.greenSurface(context),
                               borderRadius: BorderRadius.circular(999),
                             ),
                             child: Text(

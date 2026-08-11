@@ -215,21 +215,21 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
                 child: Container(
                   height: 100,
                   decoration: BoxDecoration(
-                    color: AppColors.brandMint.withValues(alpha: 0.3),
+                    color: AppColors.greenSurface(context),
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
-                      color: AppColors.brandGreen.withValues(alpha: 0.5),
+                      color: AppColors.green(context),
                       width: 1.4,
                     ),
                   ),
-                  child: const Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.add_photo_alternate_rounded, color: AppColors.brandGreen, size: 30),
+                      Icon(Icons.add_photo_alternate_rounded, color: AppColors.green(context), size: 30),
                       SizedBox(height: 6),
                       Text(
                         'Add photos to your post',
-                        style: TextStyle(color: AppColors.brandGreen, fontSize: 13),
+                        style: TextStyle(color: AppColors.green(context), fontSize: 13),
                       ),
                     ],
                   ),

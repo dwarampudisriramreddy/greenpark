@@ -220,7 +220,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
                 Icon(
                   _query.isNotEmpty ? Icons.search_off_rounded : Icons.restaurant_menu,
                   size: 52,
-                  color: AppColors.brandGreen.withValues(alpha: 0.4),
+                  color: AppColors.green(context),
                 ),
                 const SizedBox(height: 12),
                 Text(

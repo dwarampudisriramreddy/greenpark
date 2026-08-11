@@ -125,7 +125,9 @@ class AppTheme {
           (states) => IconThemeData(
             size: 24,
             color: states.contains(WidgetState.selected)
-                ? AppColors.brandGreen
+                ? isDark
+                    ? AppColors.brandGreenLight
+                    : AppColors.brandGreen
                 : isDark
                     ? Colors.white54
                     : AppColors.inkSoft,
@@ -134,7 +136,9 @@ class AppTheme {
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => AppText.label.copyWith(
             color: states.contains(WidgetState.selected)
-                ? AppColors.brandGreen
+                ? isDark
+                    ? AppColors.brandGreenLight
+                    : AppColors.brandGreen
                 : isDark
                     ? Colors.white70
                     : AppColors.inkSoft,

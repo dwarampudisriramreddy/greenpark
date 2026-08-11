@@ -117,7 +117,7 @@ class _Fallback extends StatelessWidget {
       child: Icon(
         Icons.restaurant_menu,
         size: 30,
-        color: AppColors.brandGreen.withValues(alpha: 0.45),
+        color: AppColors.green(context),
       ),
     );
   }

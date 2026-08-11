@@ -12,7 +12,6 @@ import 'info/restaurant_info_edit_screen.dart';
 import 'menu/menu_admin_screen.dart';
 import 'offers/offers_admin_screen.dart';
 import 'posts/posts_admin_screen.dart';
-import 'profile/profile_screen.dart';
 
 /// Admin workspace shell with a side navigation drawer.
 class AdminShell extends ConsumerStatefulWidget {
@@ -33,7 +32,6 @@ class _AdminShellState extends ConsumerState<AdminShell> {
     'Gallery Management',
     'Feedback Inbox',
     'Restaurant Info',
-    'Profile',
   ];
 
   static const _icons = [
@@ -44,7 +42,6 @@ class _AdminShellState extends ConsumerState<AdminShell> {
     Icons.photo_library_outlined,
     Icons.forum_outlined,
     Icons.storefront_outlined,
-    Icons.person_outline_rounded,
   ];
 
   @override
@@ -96,11 +93,11 @@ class _AdminShellState extends ConsumerState<AdminShell> {
                 child: ListView.builder(
                   itemCount: _titles.length,
                   itemBuilder: (context, i) => ListTile(
-                    leading: Icon(_icons[i], color: i == _index ? AppColors.brandGreen : null),
+                    leading: Icon(_icons[i], color: i == _index ? AppColors.green(context) : null),
                     title: Text(_titles[i]),
                     selected: i == _index,
-                    selectedColor: AppColors.brandGreen,
-                    selectedTileColor: AppColors.brandMint.withValues(alpha: 0.4),
+                    selectedColor: AppColors.green(context),
+                    selectedTileColor: AppColors.greenSurface(context),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     onTap: () {
                       setState(() => _index = i);
@@ -151,8 +148,6 @@ class _AdminShellState extends ConsumerState<AdminShell> {
               return const FeedbackAdminScreen();
             case 6:
               return const RestaurantInfoEditScreen();
-            case 7:
-              return const ProfileScreen();
             default:
               return const DashboardScreen();
           }
