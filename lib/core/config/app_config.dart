@@ -32,8 +32,9 @@ class AppConfig {
   static const String bucketRestaurantImages = 'restaurant-images';
 
   /// Fallback contact details (used only when backend data is missing).
-  static const String fallbackPhone = '+91 98765 43210';
-  static const String fallbackWhatsapp = '919876543210';
+  static const String fallbackPhone = '+91 85208 10444';
+  static const String fallbackWhatsapp = '918520810444';
+  static const String fallbackMapsUrl = 'https://maps.app.goo.gl/iXCVjkHzeiyT25ta7';
 
   /// Shared app platform targets.
   static bool get isAndroid => Platform.isAndroid;

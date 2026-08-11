@@ -85,7 +85,7 @@ class _AdminLoginScreenState extends ConsumerState<AdminLoginScreen> {
                   Text(
                     'Manage menu, offers, posts and more',
                     textAlign: TextAlign.center,
-                    style: AppText.subtitle,
+                    style: AppText.subtitleFor(context),
                   ),
                   const SizedBox(height: 32),
                   TextField(
@@ -149,7 +149,7 @@ class _AdminLoginScreenState extends ConsumerState<AdminLoginScreen> {
                   Text(
                     'Only authorized Green Park staff can sign in.',
                     textAlign: TextAlign.center,
-                    style: AppText.bodySmall,
+                    style: AppText.bodySmallFor(context),
                   ),
                 ],
               ),

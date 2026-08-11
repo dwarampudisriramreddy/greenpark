@@ -1,16 +1,15 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/image_picker_util.dart';
 import '../../../data/models/restaurant_info.dart';
 import '../../../providers/providers.dart';
 import '../../../widgets/app_network_image.dart';
 import '../../../widgets/error_view.dart';
+import '../../../widgets/picked_image_preview.dart';
 
 class RestaurantInfoEditScreen extends ConsumerStatefulWidget {
   const RestaurantInfoEditScreen({super.key});
@@ -34,8 +33,8 @@ class _RestaurantInfoEditScreenState extends ConsumerState<RestaurantInfoEditScr
   Map<String, Map<String, String>> _hours = {};
   String? _logoUrl;
   String? _heroUrl;
-  File? _pickedLogo;
-  File? _pickedHero;
+  PickedImage? _pickedLogo;
+  PickedImage? _pickedHero;
   bool _saving = false;
   bool _loaded = false;
 
@@ -72,17 +71,15 @@ class _RestaurantInfoEditScreenState extends ConsumerState<RestaurantInfoEditScr
   }
 
   Future<void> _pickLogo() async {
-    final picker = ImagePicker();
-    final file = await picker.pickImage(source: ImageSource.gallery, imageQuality: 82);
-    if (file == null) return;
-    setState(() => _pickedLogo = File(file.path));
+    final picked = await pickSingleImage();
+    if (picked == null) return;
+    setState(() => _pickedLogo = picked);
   }
 
   Future<void> _pickHero() async {
-    final picker = ImagePicker();
-    final file = await picker.pickImage(source: ImageSource.gallery, imageQuality: 82);
-    if (file == null) return;
-    setState(() => _pickedHero = File(file.path));
+    final picked = await pickSingleImage();
+    if (picked == null) return;
+    setState(() => _pickedHero = picked);
   }
 
   Future<void> _save() async {
@@ -96,14 +93,16 @@ class _RestaurantInfoEditScreenState extends ConsumerState<RestaurantInfoEditScr
       if (_pickedLogo != null) {
         logoUrl = await storage.uploadImage(
           bucket: AppConfig.bucketRestaurantImages,
-          file: _pickedLogo!,
+          bytes: _pickedLogo!.bytes,
+          extension: _pickedLogo!.extension,
           prefix: 'logo',
         );
       }
       if (_pickedHero != null) {
         heroUrl = await storage.uploadImage(
           bucket: AppConfig.bucketRestaurantImages,
-          file: _pickedHero!,
+          bytes: _pickedHero!.bytes,
+          extension: _pickedHero!.extension,
           prefix: 'hero',
         );
       }
@@ -130,10 +129,10 @@ class _RestaurantInfoEditScreenState extends ConsumerState<RestaurantInfoEditScr
           const SnackBar(content: Text('Restaurant information updated')),
         );
       }
-    } catch (_) {
+    } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Could not save changes')),
+          SnackBar(content: Text('Could not save changes: $e')),
         );
       }
     } finally {
@@ -171,18 +170,26 @@ class _RestaurantInfoEditScreenState extends ConsumerState<RestaurantInfoEditScr
                 children: [
                   GestureDetector(
                     onTap: _pickLogo,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: _pickedLogo != null
-                          ? Image.file(_pickedLogo!, width: 96, height: 96, fit: BoxFit.cover)
-                          : AppNetworkImage(url: _logoUrl, width: 96, height: 96, borderRadius: 16),
+                    child: ClipOval(
+                      child: PickedImagePreview(
+                        bytes: _pickedLogo?.bytes,
+                        width: 96,
+                        height: 96,
+                        borderRadius: 48,
+                        fallback: AppNetworkImage(
+                          url: _logoUrl,
+                          width: 96,
+                          height: 96,
+                          borderRadius: 48,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Text(
-                      'Tap the logo to upload a new one. Recommended: square PNG.',
-                      style: AppText.bodySmall,
+                      'Tap the logo to upload a new one. Recommended: circular PNG.',
+                      style: AppText.bodySmallFor(context),
                     ),
                   ),
                 ],
@@ -194,18 +201,22 @@ class _RestaurantInfoEditScreenState extends ConsumerState<RestaurantInfoEditScr
                 onTap: _pickHero,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
-                  child: _pickedHero != null
-                      ? Image.file(_pickedHero!, width: double.infinity, height: 130, fit: BoxFit.cover)
-                      : AppNetworkImage(
-                          url: _heroUrl,
-                          width: double.infinity,
-                          height: 130,
-                          borderRadius: 16,
-                        ),
+                  child: PickedImagePreview(
+                    bytes: _pickedHero?.bytes,
+                    width: double.infinity,
+                    height: 130,
+                    borderRadius: 16,
+                    fallback: AppNetworkImage(
+                      url: _heroUrl,
+                      width: double.infinity,
+                      height: 130,
+                      borderRadius: 16,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 6),
-              Text('Tap to change the large image on the home screen.', style: AppText.bodySmall),
+              Text('Tap to change the large image on the home screen.', style: AppText.bodySmallFor(context)),
               const SizedBox(height: 24),
 
               _label('Restaurant name'),

@@ -145,7 +145,7 @@ class MenuItemDetailSheet extends StatelessWidget {
                           child: Text(
                             'Available at Green Park Family Restaurant\nRajanagaram · Rajahmundry',
                             textAlign: TextAlign.center,
-                            style: AppText.bodySmall,
+                            style: AppText.bodySmallFor(context),
                           ),
                         ),
                       ],

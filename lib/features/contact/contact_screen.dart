@@ -101,7 +101,7 @@ class ContactScreen extends ConsumerWidget {
               Center(
                 child: Text(
                   'We look forward to serving you!',
-                  style: AppText.subtitle,
+                  style: AppText.subtitleFor(context),
                 ),
               ),
             ],
@@ -134,7 +134,7 @@ class _ContactIntro extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             'Call us for table bookings, party reservations or any questions.',
-            style: AppText.bodySmall.copyWith(color: Colors.white.withValues(alpha: 0.88)),
+            style: AppText.bodySmallFor(context).copyWith(color: Colors.white.withValues(alpha: 0.88)),
           ),
         ],
       ),
@@ -190,11 +190,14 @@ class _ContactTile extends StatelessWidget {
                   children: [
                     Text(title, style: AppText.headline.copyWith(fontSize: 15.5)),
                     const SizedBox(height: 2),
-                    Text(subtitle, style: AppText.bodySmall),
+                    Text(subtitle, style: AppText.bodySmallFor(context)),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded, color: AppColors.inkSoft),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: AppText.softColor(context),
+              ),
             ],
           ),
         ),

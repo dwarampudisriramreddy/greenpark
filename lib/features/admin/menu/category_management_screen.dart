@@ -177,7 +177,7 @@ class _CategoryRow extends StatelessWidget {
                   if (category.description != null)
                     Text(
                       category.description!,
-                      style: AppText.bodySmall.copyWith(fontSize: 11.5),
+                      style: AppText.bodySmallFor(context).copyWith(fontSize: 11.5),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

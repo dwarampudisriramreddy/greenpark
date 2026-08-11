@@ -157,7 +157,7 @@ class _PostView extends StatelessWidget {
                     const SizedBox(width: 5),
                     Text(
                       timeAgo(post.publishedAt ?? post.createdAt),
-                      style: AppText.bodySmall.copyWith(fontSize: 12),
+                      style: AppText.bodySmallFor(context).copyWith(fontSize: 12),
                     ),
                   ],
                 ),
@@ -172,7 +172,7 @@ class _PostView extends StatelessWidget {
                   child: Text(
                     'Green Park Family Restaurant\nRajanagaram · Rajahmundry',
                     textAlign: TextAlign.center,
-                    style: AppText.bodySmall,
+                    style: AppText.bodySmallFor(context),
                   ),
                 ),
               ],

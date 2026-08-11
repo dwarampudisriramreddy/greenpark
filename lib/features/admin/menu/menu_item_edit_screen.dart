@@ -1,16 +1,15 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/image_picker_util.dart';
 import '../../../data/models/category.dart';
 import '../../../data/models/menu_item.dart';
 import '../../../providers/providers.dart';
 import '../../../widgets/app_network_image.dart';
+import '../../../widgets/picked_image_preview.dart';
 
 class MenuItemEditScreen extends ConsumerStatefulWidget {
   final MenuItem? item;
@@ -40,7 +39,7 @@ class _MenuItemEditScreenState extends ConsumerState<MenuItemEditScreen> {
   late bool _isActive = widget.item?.isActive ?? true;
 
   String? _existingImageUrl;
-  File? _pickedImage;
+  PickedImage? _pickedImage;
   bool _uploading = false;
   bool _saving = false;
 
@@ -59,10 +58,9 @@ class _MenuItemEditScreenState extends ConsumerState<MenuItemEditScreen> {
   }
 
   Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final file = await picker.pickImage(source: ImageSource.gallery, imageQuality: 82);
-    if (file == null) return;
-    setState(() => _pickedImage = File(file.path));
+    final picked = await pickSingleImage();
+    if (picked == null) return;
+    setState(() => _pickedImage = picked);
   }
 
   Future<void> _save() async {
@@ -88,7 +86,8 @@ class _MenuItemEditScreenState extends ConsumerState<MenuItemEditScreen> {
         setState(() => _uploading = true);
         imageUrl = await ref.read(storageRepositoryProvider).uploadImage(
               bucket: AppConfig.bucketMenuImages,
-              file: _pickedImage!,
+              bytes: _pickedImage!.bytes,
+              extension: _pickedImage!.extension,
               prefix: 'dishes',
             );
       }
@@ -149,22 +148,18 @@ class _MenuItemEditScreenState extends ConsumerState<MenuItemEditScreen> {
               onTap: _uploading ? null : _pickImage,
               child: Stack(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(18),
-                    child: _pickedImage != null
-                        ? Image.file(
-                            _pickedImage!,
-                            width: 220,
-                            height: 150,
-                            fit: BoxFit.cover,
-                          )
-                        : AppNetworkImage(
-                            url: _existingImageUrl,
-                            width: 220,
-                            height: 150,
-                            borderRadius: 18,
-                            fallbackLabel: 'No image',
-                          ),
+                  PickedImagePreview(
+                    bytes: _pickedImage?.bytes,
+                    width: 220,
+                    height: 150,
+                    borderRadius: 18,
+                    fallback: AppNetworkImage(
+                      url: _existingImageUrl,
+                      width: 220,
+                      height: 150,
+                      borderRadius: 18,
+                      fallbackLabel: 'No image',
+                    ),
                   ),
                   Positioned(
                     right: 6,
@@ -192,7 +187,7 @@ class _MenuItemEditScreenState extends ConsumerState<MenuItemEditScreen> {
           Center(
             child: Text(
               'Tap to choose a photo',
-              style: AppText.bodySmall,
+              style: AppText.bodySmallFor(context),
             ),
           ),
           const SizedBox(height: 20),

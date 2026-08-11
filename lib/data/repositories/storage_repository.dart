@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -7,21 +7,20 @@ import '../supabase_client.dart';
 
 /// Uploads and deletes images in Supabase Storage.
 ///
-/// Returns the public URL of an uploaded file.
+/// Returns the public URL of an uploaded file. Uses [uploadBinary] with raw
+/// bytes so it works identically on mobile and web.
 class StorageRepository {
   Future<String> uploadImage({
     required String bucket,
-    required File file,
+    required Uint8List bytes,
+    required String extension,
     String? prefix,
   }) async {
-    final name = file.path.split('/').last;
-    final dot = name.lastIndexOf('.');
-    final ext = dot >= 0 ? name.substring(dot) : '.jpg';
-    final path =
-        '${prefix ?? 'uploads'}/${DateTime.now().millisecondsSinceEpoch}$ext';
-    await supabase.storage.from(bucket).upload(
+    final name = '${DateTime.now().millisecondsSinceEpoch}$extension';
+    final path = '${prefix ?? 'uploads'}/$name';
+    await supabase.storage.from(bucket).uploadBinary(
           path,
-          file,
+          bytes,
           fileOptions: const FileOptions(upsert: true, cacheControl: '3600'),
         );
     return supabase.storage.from(bucket).getPublicUrl(path);

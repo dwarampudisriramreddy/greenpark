@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/image_picker_util.dart';
 import '../../../data/models/gallery_image.dart';
 import '../../../providers/providers.dart';
 import '../../../widgets/app_network_image.dart';
@@ -82,9 +80,8 @@ class GalleryAdminScreen extends ConsumerWidget {
   }
 
   Future<void> _uploadImages(BuildContext context, WidgetRef ref) async {
-    final picker = ImagePicker();
-    final files = await picker.pickMultiImage(imageQuality: 82);
-    if (files.isEmpty || !context.mounted) return;
+    final picked = await pickMultipleImages();
+    if (picked.isEmpty || !context.mounted) return;
     final storage = ref.read(storageRepositoryProvider);
     final repo = ref.read(galleryRepositoryProvider);
     final messenger = ScaffoldMessenger.of(context);
@@ -99,10 +96,11 @@ class GalleryAdminScreen extends ConsumerWidget {
     messenger.showSnackBar(
       const SnackBar(content: Text('Uploading photos…')),
     );
-    for (final f in files) {
+    for (final f in picked) {
       final url = await storage.uploadImage(
         bucket: AppConfig.bucketGalleryImages,
-        file: File(f.path),
+        bytes: f.bytes,
+        extension: f.extension,
         prefix: 'gallery',
       );
       await repo.upsert(GalleryImage(
@@ -114,7 +112,7 @@ class GalleryAdminScreen extends ConsumerWidget {
     }
     refreshAllContent(ref);
     messenger.showSnackBar(
-      SnackBar(content: Text('${files.length} photo(s) uploaded')),
+      SnackBar(content: Text('${picked.length} photo(s) uploaded')),
     );
   }
 

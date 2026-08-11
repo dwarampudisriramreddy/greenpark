@@ -129,7 +129,7 @@ class _OffersIntro extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   'Offers change regularly. Ask our team for details when you visit.',
-                  style: AppText.bodySmall.copyWith(color: Colors.white.withValues(alpha: 0.85)),
+                  style: AppText.bodySmallFor(context).copyWith(color: Colors.white.withValues(alpha: 0.85)),
                 ),
               ],
             ),
@@ -190,7 +190,7 @@ class _OfferDetailSheet extends StatelessWidget {
                           const SizedBox(height: 22),
                           Text('Terms & Conditions', style: AppText.headline.copyWith(fontSize: 16)),
                           const SizedBox(height: 8),
-                          Text(offer.terms!, style: AppText.bodySmall.copyWith(height: 1.8)),
+                          Text(offer.terms!, style: AppText.bodySmallFor(context).copyWith(height: 1.8)),
                         ],
                         const SizedBox(height: 22),
                         Center(

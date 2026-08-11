@@ -68,7 +68,7 @@ class AboutScreen extends ConsumerWidget {
         Text(r.name, style: AppText.displayMedium, textAlign: TextAlign.center),
         if (r.tagline != null && r.tagline!.isNotEmpty) ...[
           const SizedBox(height: 8),
-          Text(r.tagline!, style: AppText.subtitle, textAlign: TextAlign.center),
+          Text(r.tagline!, style: AppText.subtitleFor(context), textAlign: TextAlign.center),
         ],
       ],
     );

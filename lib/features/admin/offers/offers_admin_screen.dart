@@ -181,7 +181,7 @@ class _OfferRow extends StatelessWidget {
                             const SizedBox(height: 4),
                             Text(
                               _metaText(offer),
-                              style: AppText.bodySmall.copyWith(fontSize: 11.5),
+                              style: AppText.bodySmallFor(context).copyWith(fontSize: 11.5),
                             ),
                             const SizedBox(height: 6),
                             Wrap(

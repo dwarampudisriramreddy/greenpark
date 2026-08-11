@@ -45,7 +45,7 @@ class DashboardScreen extends ConsumerWidget {
                 const SizedBox(height: 4),
                 Text(
                   'Here is what is live on your customer app.',
-                  style: AppText.bodySmall.copyWith(color: Colors.white.withValues(alpha: 0.85)),
+                  style: AppText.bodySmallFor(context).copyWith(color: Colors.white.withValues(alpha: 0.85)),
                 ),
               ],
             ),
@@ -154,7 +154,7 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(value, style: AppText.displayMedium.copyWith(fontSize: 26)),
           const SizedBox(height: 2),
-          Text(label, style: AppText.bodySmall),
+          Text(label, style: AppText.bodySmallFor(context)),
         ],
       ),
     );
@@ -169,7 +169,9 @@ class _QuickActions extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.brandMint.withValues(alpha: 0.4),
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColors.brandGreenDark.withValues(alpha: 0.35)
+            : AppColors.brandMint.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
@@ -177,15 +179,15 @@ class _QuickActions extends StatelessWidget {
         children: [
           Text('Quick tips', style: AppText.headline.copyWith(fontSize: 15)),
           const SizedBox(height: 10),
-          _tip(Icons.bolt_rounded, 'Expired offers are hidden automatically from customers.'),
-          _tip(Icons.image_outlined, 'Use the side menu to upload images for every dish.'),
-          _tip(Icons.published_with_changes_rounded, 'Changes appear in the app instantly.'),
+          _tip(context, Icons.bolt_rounded, 'Expired offers are hidden automatically from customers.'),
+          _tip(context, Icons.image_outlined, 'Use the side menu to upload images for every dish.'),
+          _tip(context, Icons.published_with_changes_rounded, 'Changes appear in the app instantly.'),
         ],
       ),
     );
   }
 
-  Widget _tip(IconData icon, String text) {
+  Widget _tip(BuildContext context, IconData icon, String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -193,7 +195,7 @@ class _QuickActions extends StatelessWidget {
         children: [
           Icon(icon, size: 16, color: AppColors.brandGreen),
           const SizedBox(width: 8),
-          Expanded(child: Text(text, style: AppText.bodySmall)),
+          Expanded(child: Text(text, style: AppText.bodySmallFor(context))),
         ],
       ),
     );

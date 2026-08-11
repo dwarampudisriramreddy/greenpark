@@ -88,7 +88,7 @@ class MenuTile extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         item.description!,
-                        style: AppText.bodySmall,
+                        style: AppText.bodySmallFor(context),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),

@@ -124,7 +124,9 @@ class _GalleryScreenState extends ConsumerState<GalleryScreen> {
                   c ?? 'All',
                   style: AppText.title.copyWith(
                     fontSize: 12.5,
-                    color: selected ? Colors.white : AppColors.ink,
+                    color: selected
+                        ? Colors.white
+                        : Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ),

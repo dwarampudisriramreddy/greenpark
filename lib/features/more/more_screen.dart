@@ -9,6 +9,7 @@ import '../../widgets/skeleton.dart';
 import '../about/about_screen.dart';
 import '../admin/login/admin_login_screen.dart';
 import '../contact/contact_screen.dart';
+import '../feedback/feedback_screen.dart';
 import '../gallery/gallery_screen.dart';
 
 class MoreScreen extends ConsumerWidget {
@@ -49,7 +50,7 @@ class MoreScreen extends ConsumerWidget {
                       children: [
                         Text(r.name, style: AppText.headline),
                         const SizedBox(height: 4),
-                        Text('Rajanagaram · Rajahmundry', style: AppText.subtitle),
+                        Text('Rajanagaram · Rajahmundry', style: AppText.subtitleFor(context)),
                       ],
                     ),
                   ),
@@ -59,6 +60,8 @@ class MoreScreen extends ConsumerWidget {
             orElse: () => const SkeletonBox(height: 100),
           ),
           const SizedBox(height: 20),
+          const _AppearanceCard(),
+          const SizedBox(height: 8),
           _MoreTile(
             icon: Icons.photo_library_rounded,
             color: AppColors.brandGreen,
@@ -86,6 +89,15 @@ class MoreScreen extends ConsumerWidget {
               MaterialPageRoute(builder: (_) => const ContactScreen()),
             ),
           ),
+          _MoreTile(
+            icon: Icons.forum_rounded,
+            color: AppColors.brandGreen,
+            title: 'Give Feedback',
+            subtitle: 'Share a review, complaint or suggestion',
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const FeedbackScreen()),
+            ),
+          ),
           const SizedBox(height: 24),
           Container(height: 1, color: AppColors.line.withValues(alpha: 0.5)),
           const SizedBox(height: 8),
@@ -98,7 +110,7 @@ class MoreScreen extends ConsumerWidget {
               MaterialPageRoute(builder: (_) => const AdminLoginScreen()),
             ),
             showChevron: false,
-            trailing: const Icon(Icons.lock_outline_rounded, color: AppColors.inkSoft, size: 18),
+            trailing: Icon(Icons.lock_outline_rounded, size: 18, color: AppText.softColor(context)),
           ),
         ],
       ),
@@ -151,15 +163,88 @@ class _MoreTile extends StatelessWidget {
                   children: [
                     Text(title, style: AppText.title.copyWith(fontSize: 15)),
                     const SizedBox(height: 2),
-                    Text(subtitle, style: AppText.bodySmall),
+                    Text(subtitle, style: AppText.bodySmallFor(context)),
                   ],
                 ),
               ),
               ?trailing,
-              if (showChevron) const Icon(Icons.chevron_right_rounded, color: AppColors.inkSoft),
+              if (showChevron)
+                Icon(
+                  Icons.chevron_right_rounded,
+                  color: AppText.softColor(context),
+                ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Light / Dark / System appearance picker.
+class _AppearanceCard extends ConsumerWidget {
+  const _AppearanceCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mode = ref.watch(themeModeProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1B231E) : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.line.withValues(alpha: 0.6)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(9),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF7A5D10).withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.brightness_6_rounded,
+                  color: Color(0xFF7A5D10),
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text('Appearance', style: AppText.title.copyWith(fontSize: 15)),
+            ],
+          ),
+          const SizedBox(height: 14),
+          SizedBox(
+            width: double.infinity,
+            child: SegmentedButton<ThemeMode>(
+              segments: const [
+                ButtonSegment(
+                  value: ThemeMode.light,
+                  icon: Icon(Icons.light_mode_rounded),
+                  label: Text('Light'),
+                ),
+                ButtonSegment(
+                  value: ThemeMode.dark,
+                  icon: Icon(Icons.dark_mode_rounded),
+                  label: Text('Dark'),
+                ),
+                ButtonSegment(
+                  value: ThemeMode.system,
+                  icon: Icon(Icons.brightness_auto_rounded),
+                  label: Text('Auto'),
+                ),
+              ],
+              selected: {mode},
+              showSelectedIcon: false,
+              onSelectionChanged: (selection) =>
+                  ref.read(themeModeProvider.notifier).setMode(selection.first),
+            ),
+          ),
+        ],
       ),
     );
   }

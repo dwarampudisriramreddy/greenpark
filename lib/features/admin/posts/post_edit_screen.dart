@@ -1,15 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/utils/image_picker_util.dart';
 import '../../../data/models/post.dart';
 import '../../../providers/providers.dart';
 import '../../../widgets/app_network_image.dart';
+import '../../../widgets/picked_image_preview.dart';
 
 class PostEditScreen extends ConsumerStatefulWidget {
   final Post? post;
@@ -33,7 +32,7 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
   DateTime? _publishedAt;
 
   late final List<String> _existingImages = List.of(widget.post?.imageUrls ?? []);
-  final List<File> _pickedImages = [];
+  final List<PickedImage> _pickedImages = [];
   bool _saving = false;
   bool _uploading = false;
 
@@ -45,10 +44,9 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
   }
 
   Future<void> _pickImages() async {
-    final picker = ImagePicker();
-    final files = await picker.pickMultiImage(imageQuality: 82);
-    if (files.isEmpty) return;
-    setState(() => _pickedImages.addAll(files.map((f) => File(f.path))));
+    final picked = await pickMultipleImages();
+    if (picked.isEmpty) return;
+    setState(() => _pickedImages.addAll(picked));
   }
 
   Future<void> _save() async {
@@ -81,7 +79,8 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
       for (final file in _pickedImages) {
         final url = await storage.uploadImage(
           bucket: AppConfig.bucketPostImages,
-          file: file,
+          bytes: file.bytes,
+          extension: file.extension,
           prefix: 'posts',
         );
         urls.add(url);
@@ -167,15 +166,15 @@ class _PostEditScreenState extends ConsumerState<PostEditScreen> {
                   return Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: isNew
-                            ? Image.file(
-                                _pickedImages[i - _existingImages.length],
-                                width: 110,
-                                height: 110,
-                                fit: BoxFit.cover,
-                              )
+                      PickedImagePreview(
+                        bytes: isNew
+                            ? _pickedImages[i - _existingImages.length].bytes
+                            : null,
+                        width: 110,
+                        height: 110,
+                        borderRadius: 12,
+                        fallback: isNew
+                            ? null
                             : AppNetworkImage(
                                 url: _existingImages[i],
                                 width: 110,

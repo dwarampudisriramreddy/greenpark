@@ -38,6 +38,20 @@ class AppText {
   static TextStyle get bodySmall =>
       _body.copyWith(fontSize: 12.5, fontWeight: FontWeight.w400, height: 1.45, color: AppColors.inkSoft);
 
+  /// Secondary-text color that adapts to the active theme.
+  static Color softColor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? const Color(0xFFA8B6AD)
+          : AppColors.inkSoft;
+
+  /// Theme-aware [subtitle] — use inside widget builds.
+  static TextStyle subtitleFor(BuildContext context) =>
+      subtitle.copyWith(color: softColor(context));
+
+  /// Theme-aware [bodySmall] — use inside widget builds.
+  static TextStyle bodySmallFor(BuildContext context) =>
+      bodySmall.copyWith(color: softColor(context));
+
   static TextStyle get label =>
       _body.copyWith(fontSize: 12, fontWeight: FontWeight.w600, letterSpacing: 0.6);
 
@@ -72,9 +86,15 @@ class AppTheme {
 
     return base.copyWith(
       textTheme: GoogleFonts.interTextTheme(base.textTheme).copyWith(
-        displayLarge: AppText.displayLarge,
-        displayMedium: AppText.displayMedium,
-        displaySmall: AppText.displaySmall,
+        displayLarge: AppText.displayLarge.copyWith(
+          color: isDark ? AppColors.white : AppColors.ink,
+        ),
+        displayMedium: AppText.displayMedium.copyWith(
+          color: isDark ? AppColors.white : AppColors.ink,
+        ),
+        displaySmall: AppText.displaySmall.copyWith(
+          color: isDark ? AppColors.white : AppColors.ink,
+        ),
       ),
       appBarTheme: AppBarTheme(
         elevation: 0,
@@ -106,14 +126,18 @@ class AppTheme {
             size: 24,
             color: states.contains(WidgetState.selected)
                 ? AppColors.brandGreen
-                : AppColors.inkSoft,
+                : isDark
+                    ? Colors.white54
+                    : AppColors.inkSoft,
           ),
         ),
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => AppText.label.copyWith(
             color: states.contains(WidgetState.selected)
                 ? AppColors.brandGreen
-                : AppColors.inkSoft,
+                : isDark
+                    ? Colors.white70
+                    : AppColors.inkSoft,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -148,20 +172,91 @@ class AppTheme {
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: AppColors.accentRed),
         ),
-        hintStyle: AppText.body.copyWith(color: AppColors.inkSoft.withValues(alpha: 0.8)),
-        labelStyle: AppText.body.copyWith(color: AppColors.inkSoft),
+        hintStyle: AppText.body.copyWith(
+          color: isDark
+              ? Colors.white54
+              : AppColors.inkSoft.withValues(alpha: 0.8),
+        ),
+        labelStyle: AppText.body.copyWith(
+          color: isDark ? Colors.white70 : AppColors.inkSoft,
+        ),
       ),
       dividerTheme: DividerThemeData(
         color: isDark ? Colors.white12 : AppColors.line,
         thickness: 1,
       ),
-      bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: Colors.transparent,
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: isDark ? const Color(0xFF1B231E) : Colors.white,
         surfaceTintColor: Colors.transparent,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        showDragHandle: false,
       ),
       progressIndicatorTheme: const ProgressIndicatorThemeData(
         color: AppColors.brandGreen,
         linearTrackColor: AppColors.brandMint,
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: AppColors.brandGreen,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          disabledBackgroundColor: isDark ? Colors.white12 : AppColors.line,
+          disabledForegroundColor: isDark ? Colors.white38 : AppColors.inkSoft,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.brandGreen,
+          side: const BorderSide(color: AppColors.brandGreen, width: 1.4),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.brandGreen,
+          textStyle: const TextStyle(fontWeight: FontWeight.w700),
+        ),
+      ),
+      checkboxTheme: CheckboxThemeData(
+        fillColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? AppColors.brandGreen
+              : null,
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? Colors.white
+              : null,
+        ),
+        trackColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? AppColors.brandGreen
+              : null,
+        ),
+        trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: isDark ? const Color(0xFF1B231E) : Colors.white,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+        titleTextStyle: AppText.headline,
+        contentTextStyle: AppText.body,
+      ),
+      datePickerTheme: DatePickerThemeData(
+        backgroundColor: isDark ? const Color(0xFF1B231E) : Colors.white,
+        surfaceTintColor: Colors.transparent,
+        headerBackgroundColor: AppColors.brandGreen,
+        headerForegroundColor: Colors.white,
+        todayBorder: const BorderSide(color: AppColors.brandGreen, width: 1.5),
+        dayShape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+        ),
       ),
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: {

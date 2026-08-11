@@ -61,12 +61,14 @@ class PostCard extends StatelessWidget {
                         Icon(
                           post.isFeatured ? Icons.auto_awesome : Icons.schedule,
                           size: 14,
-                          color: post.isFeatured ? AppColors.accentGold : AppColors.inkSoft,
+                          color: post.isFeatured
+                              ? AppColors.accentGold
+                              : AppText.softColor(context),
                         ),
                         const SizedBox(width: 4),
                         Text(
                           timeAgo(post.publishedAt ?? post.createdAt),
-                          style: AppText.bodySmall.copyWith(fontSize: 11.5),
+                          style: AppText.bodySmallFor(context).copyWith(fontSize: 11.5),
                         ),
                       ],
                     ),
@@ -76,7 +78,7 @@ class PostCard extends StatelessWidget {
                       const SizedBox(height: 6),
                       Text(
                         post.description!,
-                        style: AppText.bodySmall,
+                        style: AppText.bodySmallFor(context),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),

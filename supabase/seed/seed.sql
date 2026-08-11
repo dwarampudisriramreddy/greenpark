@@ -409,3 +409,30 @@ values
   ('Live Music Night',           'Events',            :'url' || '/gallery-images/gal-event2.jpg',   true, 10),
   ('Birthday Party Setup',       'Special Occasions', :'url' || '/gallery-images/gal-celebration.jpg', true, 11)
 on conflict do nothing;
+
+-- ----------------------------------------------------------------------------
+-- Restaurant contact details (real phone, WhatsApp, Google Maps link)
+-- ----------------------------------------------------------------------------
+update public.restaurant_info
+set phone        = '+91 85208 10444',
+    whatsapp     = '918520810444',
+    maps_url     = 'https://maps.app.goo.gl/iXCVjkHzeiyT25ta7',
+    instagram_url = null,
+    facebook_url  = null
+where id = 1;
+
+-- ----------------------------------------------------------------------------
+-- Customer reviews (published for the home showcase)
+-- ----------------------------------------------------------------------------
+insert into public.feedback_reviews (customer_name, kind, rating, message, contact, is_published, created_at) values
+  ('Ravi Teja',   'review', 5, 'The Special Green Park Biryani is honestly the best in Rajahmundry. Generous portions and amazing flavour.',
+   '91XXXXXXXXXX', true,  now() - interval '2 days'),
+  ('Sravani',     'review', 5, 'Took the whole family on Sunday - great seating, quick service and the tandoori platter was superb.',
+   '91XXXXXXXXXX', true,  now() - interval '5 days'),
+  ('Kiran Kumar', 'review', 4, 'Loved the live music night. Food was great, especially the chicken 65. Will come again!',
+   '91XXXXXXXXXX', true,  now() - interval '9 days'),
+  ('Anitha',      'review', 5, 'Best family restaurant in Rajanagaram. Clean, affordable and the biryani is a must try.',
+   '91XXXXXXXXXX', true,  now() - interval '14 days'),
+  ('Prasad',      'suggestion', 4, 'Please add more vegetarian options on the weekend buffet.', null, false, now() - interval '1 day'),
+  ('Unknown',     'complaint', 2, 'Waited a bit long for the starter on Saturday evening.', null, false, now() - interval '3 hours')
+on conflict do nothing;

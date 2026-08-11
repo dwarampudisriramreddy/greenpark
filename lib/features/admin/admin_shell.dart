@@ -6,6 +6,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../providers/providers.dart';
 import '../more/more_screen.dart';
 import 'dashboard/dashboard_screen.dart';
+import 'feedback/feedback_admin_screen.dart';
 import 'gallery/gallery_admin_screen.dart';
 import 'info/restaurant_info_edit_screen.dart';
 import 'menu/menu_admin_screen.dart';
@@ -30,6 +31,7 @@ class _AdminShellState extends ConsumerState<AdminShell> {
     'Offers Management',
     'Posts Management',
     'Gallery Management',
+    'Feedback Inbox',
     'Restaurant Info',
     'Profile',
   ];
@@ -40,6 +42,7 @@ class _AdminShellState extends ConsumerState<AdminShell> {
     Icons.local_offer_outlined,
     Icons.article_outlined,
     Icons.photo_library_outlined,
+    Icons.forum_outlined,
     Icons.storefront_outlined,
     Icons.person_outline_rounded,
   ];
@@ -82,7 +85,7 @@ class _AdminShellState extends ConsumerState<AdminShell> {
                       future: name,
                       builder: (context, snapshot) => Text(
                         snapshot.data ?? '',
-                        style: AppText.bodySmall,
+                        style: AppText.bodySmallFor(context),
                       ),
                     ),
                   ],
@@ -145,8 +148,10 @@ class _AdminShellState extends ConsumerState<AdminShell> {
             case 4:
               return const GalleryAdminScreen();
             case 5:
-              return const RestaurantInfoEditScreen();
+              return const FeedbackAdminScreen();
             case 6:
+              return const RestaurantInfoEditScreen();
+            case 7:
               return const ProfileScreen();
             default:
               return const DashboardScreen();

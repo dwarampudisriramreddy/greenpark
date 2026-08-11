@@ -1,16 +1,15 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../../core/config/app_config.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/formatters.dart';
+import '../../../core/utils/image_picker_util.dart';
 import '../../../data/models/offer.dart';
 import '../../../providers/providers.dart';
 import '../../../widgets/app_network_image.dart';
+import '../../../widgets/picked_image_preview.dart';
 
 class OfferEditScreen extends ConsumerStatefulWidget {
   final Offer? offer;
@@ -31,7 +30,7 @@ class _OfferEditScreenState extends ConsumerState<OfferEditScreen> {
   late bool _isActive = widget.offer?.isActive ?? true;
 
   String? _existingBanner;
-  File? _pickedBanner;
+  PickedImage? _pickedBanner;
   bool _saving = false;
   bool _uploading = false;
 
@@ -50,10 +49,9 @@ class _OfferEditScreenState extends ConsumerState<OfferEditScreen> {
   }
 
   Future<void> _pickBanner() async {
-    final picker = ImagePicker();
-    final file = await picker.pickImage(source: ImageSource.gallery, imageQuality: 82);
-    if (file == null) return;
-    setState(() => _pickedBanner = File(file.path));
+    final picked = await pickSingleImage();
+    if (picked == null) return;
+    setState(() => _pickedBanner = picked);
   }
 
   Future<void> _pickDate({required bool isFrom}) async {
@@ -91,7 +89,8 @@ class _OfferEditScreenState extends ConsumerState<OfferEditScreen> {
         setState(() => _uploading = true);
         banner = await ref.read(storageRepositoryProvider).uploadImage(
               bucket: AppConfig.bucketOfferBanners,
-              file: _pickedBanner!,
+              bytes: _pickedBanner!.bytes,
+              extension: _pickedBanner!.extension,
               prefix: 'banners',
             );
       }
@@ -141,22 +140,18 @@ class _OfferEditScreenState extends ConsumerState<OfferEditScreen> {
               onTap: _uploading ? null : _pickBanner,
               child: Stack(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(18),
-                    child: _pickedBanner != null
-                        ? Image.file(
-                            _pickedBanner!,
-                            width: double.infinity,
-                            height: 160,
-                            fit: BoxFit.cover,
-                          )
-                        : AppNetworkImage(
-                            url: _existingBanner,
-                            width: double.infinity,
-                            height: 160,
-                            borderRadius: 18,
-                            fallbackLabel: 'Add banner',
-                          ),
+                  PickedImagePreview(
+                    bytes: _pickedBanner?.bytes,
+                    width: double.infinity,
+                    height: 160,
+                    borderRadius: 18,
+                    fallback: AppNetworkImage(
+                      url: _existingBanner,
+                      width: double.infinity,
+                      height: 160,
+                      borderRadius: 18,
+                      fallbackLabel: 'Add banner',
+                    ),
                   ),
                   Positioned(
                     right: 8,
@@ -181,7 +176,7 @@ class _OfferEditScreenState extends ConsumerState<OfferEditScreen> {
             ),
           ),
           const SizedBox(height: 6),
-          Center(child: Text('Tap to upload a banner image', style: AppText.bodySmall)),
+          Center(child: Text('Tap to upload a banner image', style: AppText.bodySmallFor(context))),
           const SizedBox(height: 20),
 
           TextField(

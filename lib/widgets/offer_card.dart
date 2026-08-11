@@ -35,7 +35,7 @@ class OfferCard extends StatelessWidget {
                 children: [
                   AppNetworkImage(
                     url: offer.bannerUrl,
-                    height: 140,
+                    height: compact ? 132 : 140,
                     width: double.infinity,
                     borderRadius: 0,
                   ),
@@ -69,33 +69,71 @@ class OfferCard extends StatelessWidget {
                     ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(14),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(offer.title, style: AppText.headline.copyWith(fontSize: 16.5)),
-                    const SizedBox(height: 6),
-                    Text(
-                      offer.description ?? '',
-                      style: AppText.bodySmall,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
+              if (compact)
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(14),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.schedule_rounded, size: 14, color: AppColors.brandGreen),
-                        const SizedBox(width: 5),
                         Text(
-                          _validityText(offer),
-                          style: AppText.bodySmall.copyWith(fontSize: 11.5),
+                          offer.title,
+                          style: AppText.headline.copyWith(fontSize: 16.5),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 6),
+                        Expanded(
+                          child: Text(
+                            offer.description ?? '',
+                            style: AppText.bodySmallFor(context),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(Icons.schedule_rounded, size: 14, color: AppColors.brandGreen),
+                            const SizedBox(width: 5),
+                            Text(
+                              _validityText(offer),
+                              style: AppText.bodySmallFor(context).copyWith(fontSize: 11.5),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
+                )
+              else
+                Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(offer.title, style: AppText.headline.copyWith(fontSize: 16.5)),
+                      const SizedBox(height: 6),
+                      Text(
+                        offer.description ?? '',
+                        style: AppText.bodySmallFor(context),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          const Icon(Icons.schedule_rounded, size: 14, color: AppColors.brandGreen),
+                          const SizedBox(width: 5),
+                          Text(
+                            _validityText(offer),
+                            style: AppText.bodySmallFor(context).copyWith(fontSize: 11.5),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
             ],
           ),
         ),

@@ -83,7 +83,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               const SizedBox(height: 14),
               Text(name ?? 'Restaurant Admin', style: AppText.headline.copyWith(fontSize: 18)),
               const SizedBox(height: 4),
-              Text(email, style: AppText.subtitle),
+              Text(email, style: AppText.subtitleFor(context)),
             ],
           ),
         ),

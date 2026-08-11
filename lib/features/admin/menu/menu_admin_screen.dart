@@ -106,7 +106,9 @@ class _MenuAdminScreenState extends ConsumerState<MenuAdminScreen> {
                               c.name,
                               style: AppText.title.copyWith(
                                 fontSize: 12.5,
-                                color: selected ? Colors.white : AppColors.ink,
+                                color: selected
+                                    ? Colors.white
+                                    : Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
                           ),
@@ -149,7 +151,7 @@ class _MenuAdminScreenState extends ConsumerState<MenuAdminScreen> {
                               const SizedBox(height: 10),
                               Text('No dishes in this category', style: AppText.headline),
                               const SizedBox(height: 6),
-                              Text('Tap + Add dish to create one.', style: AppText.subtitle),
+                              Text('Tap + Add dish to create one.', style: AppText.subtitleFor(context)),
                             ],
                           ),
                         ),
@@ -249,7 +251,7 @@ class _ItemRow extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       '₹${item.price.toStringAsFixed(0)} · ${item.isAvailable ? 'Available' : 'Sold out'}',
-                      style: AppText.bodySmall.copyWith(fontSize: 12),
+                      style: AppText.bodySmallFor(context).copyWith(fontSize: 12),
                     ),
                   ],
                 ),

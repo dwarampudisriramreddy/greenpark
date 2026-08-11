@@ -83,7 +83,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
             onChanged: (v) => setState(() => _query = v.trim().toLowerCase()),
             decoration: InputDecoration(
               hintText: 'Search biryani, paneer, curry…',
-              prefixIcon: const Icon(Icons.search_rounded, color: AppColors.inkSoft),
+              prefixIcon: Icon(Icons.search_rounded, color: AppText.softColor(context)),
               suffixIcon: _query.isNotEmpty
                   ? IconButton(
                       icon: const Icon(Icons.close_rounded, size: 20),
@@ -183,7 +183,9 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
                         c.name,
                         style: AppText.title.copyWith(
                           fontSize: 13,
-                          color: selected ? Colors.white : AppColors.ink,
+                          color: selected
+                              ? Colors.white
+                              : Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ],
@@ -228,7 +230,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
                 const SizedBox(height: 4),
                 Text(
                   'Try a different category or search term.',
-                  style: AppText.subtitle,
+                  style: AppText.subtitleFor(context),
                 ),
               ],
             ),
@@ -243,7 +245,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
       children: [
         Text(
           '${items.length} ${items.length == 1 ? 'dish' : 'dishes'} · $catName',
-          style: AppText.bodySmall,
+          style: AppText.bodySmallFor(context),
         ),
         const SizedBox(height: 10),
         for (final item in items)
@@ -298,13 +300,21 @@ class _FilterChip extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(icon, size: 15, color: selected ? AppColors.brandGreen : AppColors.inkSoft),
+            Icon(
+              icon,
+              size: 15,
+              color: selected
+                  ? AppColors.brandGreen
+                  : AppText.softColor(context),
+            ),
             const SizedBox(width: 6),
             Text(
               label,
               style: AppText.title.copyWith(
                 fontSize: 12.5,
-                color: selected ? AppColors.brandGreen : AppColors.inkSoft,
+                color: selected
+                    ? AppColors.brandGreen
+                    : AppText.softColor(context),
               ),
             ),
           ],
