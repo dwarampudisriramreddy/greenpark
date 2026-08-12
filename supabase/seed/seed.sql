@@ -7,12 +7,17 @@
 \set url 'https://tygwlqvtxhepngwnnpqu.supabase.co/storage/v1/object/public'
 
 -- Register the restaurant owner as admin
+-- Remove the previous admin email (dwarampudisriramreddy@gmail.com)
+delete from public.admins where email = 'dwarampudisriramreddy@gmail.com';
+
 insert into public.admins (id, email, full_name)
 values (
   'e1371f89-b84c-4a29-a9f1-fdf318754b8a',
-  'dwarampudisriramreddy@gmail.com',
-  'Dwarampudisri Ramreddy'
-) on conflict (id) do nothing;
+  'greenpark@rajanagaram.in',
+  'Green Park Restaurant Admin'
+)
+on conflict (id) do update
+  set email = excluded.email, full_name = excluded.full_name;
 
 -- Set logo + hero on restaurant profile
 update public.restaurant_info
